@@ -1,6 +1,6 @@
 import './App.css'
 import React, {PureComponent} from 'react'
-import {Grid} from '@material-ui/core'
+import {Grid, Fab, Typography} from '@material-ui/core'
 import PlayerCard from "./PlayerCard";
 
 const domain = 'http://localhost:3001'
@@ -36,8 +36,14 @@ class App extends PureComponent {
 
   render() {
     const {players, teams} = this.state
-    console.log(teams)
     return <div className="App">
+      <header className="App-heading App-flex">
+        <Fab variant='outlined' style={{fontSize:18, border:'1px solid black', textTransform:'none', height:30}} disableRipple>
+          <Typography style={{fontSize:10}}>
+            Pichichis
+          </Typography>
+        </Fab>
+      </header>
       <div className="App-teams App-flex"> {
         /*
                   TODO ejercicio 2
