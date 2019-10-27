@@ -1,7 +1,8 @@
 import './App.css'
 import React, {PureComponent} from 'react'
-import {Grid, Fab, Typography} from '@material-ui/core'
+import {Fab, Grid, Typography} from '@material-ui/core'
 import PlayerCard from "./PlayerCard";
+import ModalComponent from "./ModalComponent";
 
 const domain = 'http://localhost:3001'
 
@@ -12,8 +13,9 @@ class App extends PureComponent {
     this.state = {
       teams: [],
       players: [],
+      pichichis: [],
       avatarSize: 280,
-      cardStyle: 'regularCard'
+      modalOpen: false,
     }
   }
 
@@ -34,12 +36,27 @@ class App extends PureComponent {
       });
   }
 
+  handleModal = () => {
+    if (this.state.modalOpen === false) {
+      this.setState({modalOpen: true})
+    }
+    else {
+      this.setState({modalOpen: false})
+    }
+  }
+
   render() {
-    const {players, teams} = this.state
+    const {players, teams, modalOpen} = this.state
     return <div className="App">
+      <div style={{position: 'absolute', right: '50%', top: '50%'}}>
+        <ModalComponent open={modalOpen} handleClose={this.handleModal}/>
+      </div>
       <header className="App-heading App-flex">
-        <Fab variant='outlined' style={{fontSize:18, border:'1px solid black', textTransform:'none', height:30}} disableRipple>
-          <Typography style={{fontSize:10}}>
+        <Fab variant='outlined'
+             style={{fontSize: 18, border: '1px solid black', textTransform: 'none', height: 30}}
+             disableRipple
+             onClick={this.handleModal}>
+          <Typography style={{fontSize: 10}}>
             Pichichis
           </Typography>
         </Fab>
@@ -70,5 +87,6 @@ class App extends PureComponent {
     </div>
   }
 }
+
 
 export default App
