@@ -6,6 +6,9 @@ import ModalComponent from "./ModalComponent";
 
 const domain = 'http://localhost:3001'
 
+let pichichiStats = []
+
+
 //TODO: reduce class complexity
 class App extends PureComponent {
   constructor() {
@@ -16,6 +19,7 @@ class App extends PureComponent {
       pichichis: [],
       avatarSize: 280,
       modalOpen: false,
+      sorted: true,
     }
   }
 
@@ -52,16 +56,39 @@ class App extends PureComponent {
     }
   }
 
+  handlePichichisGoals = (goals) => {
+    if (typeof goals === "string") {
+      return goals.match(/\d/)[0]
+    }
+    else {
+      return goals
+    }
+  }
+
+  goalSort = (a, b) => {
+    return (Number(a.match(/(\d+)/g)[0]) - Number((b.match(/(\d+)/g)[0])));
+  }
+
   handlePichichi = (pichichis, players) => {
-    let pichichiStats = []
-    pichichis.map(pichichi => {
+    pichichis.forEach(pichichi => {
       players.forEach(player => {
         if (pichichi.playerId === player.id && pichichi.goals) {
-          pichichiStats.push(player.name + ': '+pichichi.goals + '\n')
+          pichichiStats.push(player.name + ': ' + this.handlePichichisGoals(pichichi.goals) + '\n')
         }
       })
     })
-    return pichichiStats;
+    this.setState({pichichis: pichichiStats});
+    return pichichiStats
+  }
+
+  sortPichichis = () => {
+    let sorted = pichichiStats.sort(this.goalSort);
+    if(this.state.sorted === false){
+      this.setState({pichichis: sorted, sorted: true})
+    }
+    else{
+      this.setState({pichichis: sorted.reverse(), sorted: false})
+    }
   }
 
   render() {
@@ -69,7 +96,8 @@ class App extends PureComponent {
     return <div className="App">
       <div style={{position: 'absolute', right: '50%', top: '50%'}}>
         <ModalComponent open={modalOpen} handleClose={this.handleModal}
-                        pichichis={this.handlePichichi(pichichis, players)}/>
+                        pichichis={this.handlePichichi(pichichis, players)}
+                        handlePichichis={this.sortPichichis}/>
       </div>
       <header className="App-heading App-flex">
         <Fab variant='outlined'
