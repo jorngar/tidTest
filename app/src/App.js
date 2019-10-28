@@ -30,6 +30,8 @@ class App extends PureComponent {
       })
       .then(teams => {
         this.setState({teams})
+        localStorage.setItem('teams', JSON.stringify(teams))
+        localStorage.getItem('teams')
       });
     fetch(`${domain}/players`)
       .then(response => {
@@ -37,6 +39,8 @@ class App extends PureComponent {
       })
       .then(players => {
         this.setState({players})
+        localStorage.setItem('players', JSON.stringify(players))
+        localStorage.getItem('players')
       });
     fetch(`${domain}/pichichis`)
       .then(response => {
@@ -44,6 +48,8 @@ class App extends PureComponent {
       })
       .then(pichichis => {
         this.setState({pichichis})
+        localStorage.setItem('pichichis', JSON.stringify(pichichis))
+        localStorage.getItem('pichichis')
       });
   }
 
@@ -77,22 +83,25 @@ class App extends PureComponent {
         }
       })
     })
-    this.setState({pichichis: pichichiStats});
-    return pichichiStats
+    let setPichichis = [...new Set(pichichiStats)]
+    return setPichichis
   }
 
   sortPichichis = () => {
     let sorted = pichichiStats.sort(this.goalSort);
-    if(this.state.sorted === false){
+    if (this.state.sorted === false) {
       this.setState({pichichis: sorted, sorted: true})
     }
-    else{
+    else {
       this.setState({pichichis: sorted.reverse(), sorted: false})
     }
   }
 
   render() {
-    const {players, teams, modalOpen, pichichis} = this.state
+    const players = this.state.players === [] ? this.state.players : JSON.parse(localStorage.getItem('players'));
+    const teams = this.state.teams === [] ? this.state.teams : JSON.parse(localStorage.getItem('teams'));
+    const pichichis = this.state.pichichis === [] ? this.state.pichichis : JSON.parse(localStorage.getItem('pichichis'));
+    const {modalOpen} = this.state;
     return <div className="App">
       <div style={{position: 'absolute', right: '50%', top: '50%'}}>
         <ModalComponent open={modalOpen} handleClose={this.handleModal}
