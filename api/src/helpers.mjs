@@ -44,7 +44,6 @@ export const playerConstructor = (player, team) => {
     Object.getOwnPropertyDescriptor(team, 'id'));
   //Remove non wanted properties
   delete player['price'];
-  delete player['id'];
   return player;
 }
 

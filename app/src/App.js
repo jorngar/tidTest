@@ -34,6 +34,13 @@ class App extends PureComponent {
       .then(players => {
         this.setState({players})
       });
+    fetch(`${domain}/pichichis`)
+      .then(response => {
+        return response.json();
+      })
+      .then(pichichis => {
+        this.setState({pichichis})
+      });
   }
 
   handleModal = () => {
@@ -45,11 +52,24 @@ class App extends PureComponent {
     }
   }
 
+  handlePichichi = (pichichis, players) => {
+    let pichichiStats = []
+    pichichis.map(pichichi => {
+      players.forEach(player => {
+        if (pichichi.playerId === player.id && pichichi.goals) {
+          pichichiStats.push(player.name + ': '+pichichi.goals + '\n')
+        }
+      })
+    })
+    return pichichiStats;
+  }
+
   render() {
-    const {players, teams, modalOpen} = this.state
+    const {players, teams, modalOpen, pichichis} = this.state
     return <div className="App">
       <div style={{position: 'absolute', right: '50%', top: '50%'}}>
-        <ModalComponent open={modalOpen} handleClose={this.handleModal}/>
+        <ModalComponent open={modalOpen} handleClose={this.handleModal}
+                        pichichis={this.handlePichichi(pichichis, players)}/>
       </div>
       <header className="App-heading App-flex">
         <Fab variant='outlined'
