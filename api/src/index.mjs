@@ -39,6 +39,7 @@ app.get('/pichichis', function (req, res) {
 });
 
 app.post('/transfer', function (req, res) {
+  console.log(req.data)
   let playerId = String(req.body.playerId)
   let teamId = String(req.body.teamId)
 

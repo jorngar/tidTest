@@ -20,10 +20,11 @@ class App extends PureComponent {
       avatarSize: 280,
       modalOpen: false,
       sorted: true,
+      transferModalOpen: false,
     }
   }
 
-  componentDidMount() {
+  loadApp = () => {
     fetch(`${domain}/teams`)
       .then(response => {
         return response.json();
@@ -51,6 +52,10 @@ class App extends PureComponent {
         localStorage.setItem('pichichis', JSON.stringify(pichichis))
         localStorage.getItem('pichichis')
       });
+  }
+
+  componentDidMount() {
+    this.loadApp();
   }
 
   handleModal = () => {
@@ -97,16 +102,28 @@ class App extends PureComponent {
     }
   }
 
+  handleCardClick = () => {
+    if (this.state.transferModalOpen === false) {
+      this.setState({transferModalOpen: true})
+    }
+    else {
+      this.setState({transferModalOpen: false})
+    }
+  }
+
   render() {
     const players = this.state.players === [] ? this.state.players : JSON.parse(localStorage.getItem('players'));
     const teams = this.state.teams === [] ? this.state.teams : JSON.parse(localStorage.getItem('teams'));
     const pichichis = this.state.pichichis === [] ? this.state.pichichis : JSON.parse(localStorage.getItem('pichichis'));
-    const {modalOpen} = this.state;
+    const {modalOpen, transferModalOpen} = this.state;
     return <div className="App">
       <div style={{position: 'absolute', right: '50%', top: '50%'}}>
         <ModalComponent open={modalOpen} handleClose={this.handleModal}
                         pichichis={this.handlePichichi(pichichis, players)}
                         handlePichichis={this.sortPichichis}/>
+        {players ?
+          <ModalComponent open={transferModalOpen} handleClose={this.handleCardClick}
+                          teamList={teams} playersByTeam={players} reloadApi={this.loadApp}/> : null}
       </div>
       <header className="App-heading App-flex">
         <Fab variant='outlined'
@@ -137,7 +154,7 @@ class App extends PureComponent {
           {players.map(player =>
             //TODO move styles into a separate js file and export this class using withStyles or similar or just to css file
             <Grid item xs={12} sm={6} lg={4}>
-              <PlayerCard player={player} teams={teams}/>
+              <PlayerCard player={player} teams={teams} handleClick={this.handleCardClick}/>
             </Grid>)}
         </Grid>
       </div>
